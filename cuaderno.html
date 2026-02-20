@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poemario</title>
+    <style>
+        body {
+            background-color: #e9ecef;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+        }
+
+        .btn-volver {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #2d6a4f;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-family: sans-serif;
+            text-decoration: none;
+            font-size: 0.7rem;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #1b4332;
+            z-index: 10;
+        }
+
+        .cuaderno-spread {
+            width: 92%;
+            max-width: 500px; 
+            height: 55vh; /* Altura reducida de 70vh a 55vh */
+            display: flex;
+            background: #2d6a4f;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        /* Línea central del cuaderno */
+        .cuaderno-spread::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: rgba(0,0,0,0.1);
+            z-index: 5;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .cuaderno {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            overflow: hidden;
+            scroll-behavior: smooth;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+
+        .hoja {
+            min-width: 50%; /* DOS HOJAS POR VISTA */
+            height: 100%;
+            padding: 25px 15px;
+            box-sizing: border-box;
+            background-image: linear-gradient(#dee2e6 1px, transparent 1px);
+            background-size: 100% 25px;
+            line-height: 25px;
+            border-right: 1px solid #ddd;
+            overflow-y: auto;
+        }
+
+        h2 { color: #1b4332; font-size: 1.1rem; text-align: center; margin-top: 0; margin-bottom: 10px; }
+        p { color: #495057; font-style: italic; font-size: 0.85rem; white-space: pre-wrap; margin-bottom: 15px; margin-top: 5px; }
+
+        .controles { display: flex; gap: 20px; margin-top: 20px; }
+
+        .btn-nav {
+            background-color: #40916c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #1b4332;
+            transition: all 0.1s;
+        }
+
+        .btn-nav:active { transform: translateY(4px); box-shadow: 0 0 0 #1b4332; }
+
+        .hoja p {
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="btn-volver">❮ VOLVER</a>
+
+    <div class="cuaderno-spread">
+        <div class="cuaderno" id="miCuaderno">
+            <div class="hoja">
+                <h2>Sin tu amor</h2>
+                <p>— Sin mis lentes no veo, 
+sin mis manos no siento, 
+sin tu voz no existo, 
+sin tu amor no vivo. </p> 
+                <p> Sin enchiladas no como,
+sin una coca no tomo,
+sin tus labios me quemo,
+sin tu amor me muero. —</p>
+            </div>
+            
+            <div class="hoja">
+                <h2>Arbo-tàrrec</h2>
+                <p>— Sentado a tu lado, 
+a tu sombra me refugio,
+tus hojas hacen tanto ruido, 
+siempre tus ramas estudio.</p>
+                <p> Tus frutos me dan vida, 
+la tristeza a tu lado es aborrecida,
+de ti viene el aire que respiro,
+eres mi raíz y mi destino. —</p>
+            </div>
+
+            <div class="hoja">
+                <h2>Tu novio caprichoso.</h2>
+                <p>— Ham murió,
+¿Ahora qué hiciste, corazón?
+Es que no le diste un beso,
+no enredaron las piernas y dormiste a su lado.</p>
+                <p> Ham murió,
+¿Ahora qué hiciste, corazón?
+Es que no le diste un abrazo,
+no le dijiste que lo amabas y no le diste tu calor.</p>
+            </div>
+
+            <div class="hoja">
+                <p>Ham murió,
+¿Ahora qué hiciste, corazón?
+Solo debes entregarle tu amor, tu cariño y tu atención,
+porque Ham es tu novio caprichoso.—</p>
+                <div style="text-align: center; margin-top: 20px;">💚</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controles">
+        <button class="btn-nav" onclick="mover(-1)">❮</button>
+        <button class="btn-nav" onclick="mover(1)">❯</button>
+    </div>
+
+    <script>
+        localStorage.setItem('nivel1Completado', 'true');
+
+        const c = document.getElementById('miCuaderno');
+        
+        function mover(dir) {
+            // Ahora movemos el ancho total para que pasen las dos páginas
+            const containerWidth = c.offsetWidth;
+            c.scrollLeft += (dir * containerWidth);
+        }
+    </script>
+</body>
+</html>
