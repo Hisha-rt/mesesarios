@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz mesesario</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            background-color: #1a1d1a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            font-family: 'Press Start 2P', cursive;
+            box-sizing: border-box;
+            color: #a8bba8;
+        }
+
+        h1 {
+            color: #2ecc71;
+            font-size: 0.9rem; /* Un poco más pequeño para que quepa bien en móvil */
+            text-align: center;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+            min-height: 60px; /* Espacio reservado para el título */
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 15px;
+            max-width: 350px;
+            width: 100%;
+        }
+
+        .nivel {
+            aspect-ratio: 1 / 1;
+            background-color: #2d3436;
+            border: 3px solid #4b534b;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nivel.desbloqueado {
+            background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%);
+            border-color: #52b788;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        /* Clase para el estado completado */
+        .nivel.terminado {
+            background: #1b4332;
+            border-color: #2ecc71;
+            animation: none;
+            opacity: 0.9;
+        }
+
+        .nivel.terminado::after {
+            content: '✅';
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            font-size: 1rem;
+        }
+
+        .nivel.bloqueado::after {
+            content: '🔒';
+            font-size: 1rem;
+            filter: grayscale(1);
+        }
+
+        .numero { color: #d8f3dc; font-size: 1.2rem; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #2d3436;
+            border: 4px solid #2ecc71;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+            max-width: 300px;
+        }
+
+        .modal-content p { font-size: 0.7rem; line-height: 1.5; color: #fff; }
+        #countdown { color: #2ecc71; font-size: 0.9rem; margin-top: 15px; display: block; }
+
+        .btn-cerrar {
+            margin-top: 20px;
+            background: #2ecc71;
+            color: #1a1d1a;
+            border: none;
+            padding: 10px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.6rem;
+            cursor: pointer;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(82, 183, 136, 0.6); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="titulo-mision">MISIÓN: AGUANTAR A HAM UN MES<br>EN PROGRESO</h1>
+    
+    <div class="grid-container">
+        <a href="cuaderno.html" id="nivel-1" class="nivel desbloqueado">
+            <span class="numero">1</span>
+        </a>
+        <div class="nivel bloqueado" onclick="mostrarBloqueo()"></div>
+        <div class="nivel bloqueado" onclick="mostrarBloqueo()"></div>
+        <div class="nivel bloqueado" onclick="mostrarBloqueo()"></div>
+        <div class="nivel bloqueado" onclick="mostrarBloqueo()"></div>
+        <div class="nivel bloqueado" onclick="mostrarBloqueo()"></div>
+        <div class="nivel bloqueado" onclick="mostrarBloqueo()"></div>
+        <div class="nivel bloqueado" onclick="mostrarBloqueo()"></div>
+        <div class="nivel bloqueado" onclick="mostrarBloqueo()"></div>
+        <div class="nivel bloqueado" onclick="mostrarBloqueo()"></div>
+        <div class="nivel bloqueado" onclick="mostrarBloqueo()"></div>
+        <div class="nivel bloqueado" onclick="mostrarBloqueo()"></div>
+    </div>
+
+    <div id="modalBloqueo" class="modal">
+        <div class="modal-content">
+            <p>ESTE NIVEL ESTÁ BLOQUEADO HASTA EL PRÓXIMO MES.</p>
+            <p>SIGUIENTE DESBLOQUEO EN:</p>
+            <span id="countdown">Cargando...</span>
+            <button class="btn-cerrar" onclick="cerrarBloqueo()">VOLVER</button>
+        </div>
+    </div>
+
+    <script>
+        // Lógica para detectar si ya volvió del cuaderno
+        window.onload = function() {
+            if (localStorage.getItem('nivel1Completado') === 'true') {
+                document.getElementById('titulo-mision').innerHTML = "NIVEL 1<br>COMPLETADO";
+                document.getElementById('nivel-1').classList.add('terminado');
+            }
+        };
+
+        function mostrarBloqueo() {
+            document.getElementById('modalBloqueo').style.display = 'flex';
+            actualizarCountdown();
+        }
+
+        function cerrarBloqueo() {
+            document.getElementById('modalBloqueo').style.display = 'none';
+        }
+
+        function actualizarCountdown() {
+            const ahora = new Date();
+            let año = ahora.getFullYear();
+            let mes = ahora.getMonth();
+            
+            if (ahora.getDate() >= 20) {
+                mes++;
+            }
+            
+            const proximo20 = new Date(año, mes, 20, 0, 0, 0);
+            
+            const timer = setInterval(() => {
+                const actual = new Date().getTime();
+                const distancia = proximo20 - actual;
+
+                const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
+                const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+                const segs = Math.floor((distancia % (1000 * 60)) / 1000);
+
+                document.getElementById("countdown").innerHTML = `${dias}D ${horas}H ${mins}M ${segs}S`;
+
+                if (distancia < 0) {
+                    clearInterval(timer);
+                    document.getElementById("countdown").innerHTML = "¡NUEVO NIVEL DISPONIBLE!";
+                }
+            }, 1000);
+        }
+    </script>
+
+</body>
+</html>
