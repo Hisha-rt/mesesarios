@@ -122,15 +122,31 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
             display: flex; flex-direction: column; align-items: center;
             width: 55%; position: absolute;
+            cursor: pointer;
         }
 
         .polaroid.p1 { top: 20%; left: 10%; transform: rotate(-6deg); }
         .polaroid.p2 { bottom: 5%; right: 10%; transform: rotate(4deg); }
+        
+        .polaroid:hover {
+            transform: scale(1.1) rotate(0deg);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
 
         .foto-placeholder {
             width: 100%; aspect-ratio: 1 / 1; background-color: #e0ece6;
             display: flex; justify-content: center; align-items: center;
             color: #a68462; font-family: sans-serif; font-size: 0.8rem; text-align: center;
+        }
+
+        /* ESTILO PARA LA FOTO REAL EN LA GALERÍA */
+        .img-polaroid {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            display: block;
+            background-color: #e0ece6;
         }
 
         .texto-polaroid { font-family: 'Caveat', cursive; color: #5c4033; font-size: 1.2rem; margin-top: 5px; }
@@ -147,6 +163,7 @@
             gap: 20px; background-color: rgba(253, 251, 247, 0.9); border-top: 1px dashed #b5d5c5;
         }
         .btn-nav { background-color: #b5d5c5; color: #5c4033; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; }
+        .btn-nav:active { transform: scale(0.9); }
 
         .libro-abierto .portada { transform: rotateY(-180deg); opacity: 0; pointer-events: none; }
         .libro-abierto .interior { transform: rotateY(0deg); }
@@ -170,7 +187,6 @@
         }
         .wizard-content textarea { height: 100px; resize: none; }
 
-        /* Botones del Wizard */
         .btn-siguiente-cuadro {
             background-color: #8dae9d; color: white; border: none; border-radius: 8px;
             width: 40px; height: 40px; font-size: 1.2rem; cursor: pointer; display: inline-flex;
@@ -186,7 +202,6 @@
 
         .pasos-lista { text-align: left; font-size: 0.8rem; color: #8dae9d; max-height: 80px; overflow-y: auto; margin-bottom: 10px; font-family: sans-serif;}
         
-        /* Ocultar pasos al inicio */
         .paso-wizard { display: none; }
         .paso-wizard.activo { display: block; }
 
@@ -198,30 +213,28 @@
 
     <div class="libro-container">
         <div class="libro" id="miRecetario">
-            <!-- PORTADA -->
             <div class="cara portada" onclick="abrirRecetario()">
                 <h1>Recetario</h1>
                 <span style="color:#fdfbf7; font-family:sans-serif; font-size:0.8rem; margin-top:20px;">TOCA PARA ABRIR</span>
             </div>
 
-            <!-- INTERIOR -->
             <div class="cara interior">
                 <div class="slider-galeria" id="sliderGaleria">
                     
-                <!-- PÁGINA 1: Recetas 1 y 2 -->
                     <div class="pagina">
                         <h2>Nuestros Platillos</h2>
+                        
                         <div class="polaroid p1" onclick="location.href='receta1.html'">
-                            <div class="foto-placeholder">⏳<br>Aún no creada</div>
-                            <span class="texto-polaroid">Receta 1</span>
+                            <img src="enchiladas_suizas.jpg" alt="Enchiladas Suizas" class="img-polaroid">
+                            <span class="texto-polaroid">Enchiladas Suizas</span>
                         </div>
+
                         <div class="polaroid p2" onclick="location.href='receta2.html'">
                             <div class="foto-placeholder">⏳<br>Aún no creada</div>
                             <span class="texto-polaroid">Receta 2</span>
                         </div>
                     </div>
 
-                    <!-- PÁGINA 2: Recetas 3 y 4 -->
                     <div class="pagina">
                         <h2>Más Delicias</h2>
                         <div class="polaroid p1" onclick="location.href='receta3.html'">
@@ -234,7 +247,6 @@
                         </div>
                     </div>
 
-                    <!-- PÁGINA 3: Agregar -->
                     <div class="pagina">
                         <h2>Nueva Magia</h2>
                         <button class="btn-agregar-receta" onclick="abrirWizard()">Agrega una receta aquí ✨</button>
@@ -242,7 +254,6 @@
 
                 </div>
 
-                <!-- Controles -->
                 <div class="controles">
                     <button class="btn-nav" onclick="moverGaleria(-1)">❮</button>
                     <button class="btn-nav" onclick="moverGaleria(1)">❯</button>
@@ -251,57 +262,42 @@
         </div>
     </div>
 
-    <!-- WIZARD PARA CREAR RECETA -->
     <div class="modal-wizard" id="wizard">
         <div class="wizard-content">
-            
-            <!-- PASO 1: Nombre -->
             <div class="paso-wizard activo" id="paso1">
                 <p>Mi amor, aquí escribe cómo se llamará la recetita:</p>
                 <input type="text" id="nombreReceta" placeholder="Ej. Hotcakes de amor">
                 <button class="btn-siguiente-cuadro" onclick="avanzarPaso(1, 2)">❯</button>
             </div>
-
-            <!-- PASO 2: Ingredientes -->
             <div class="paso-wizard" id="paso2">
                 <p>Ingresa todos los ingredientes que se utilizarán:</p>
                 <textarea id="ingredientesReceta" placeholder="- 1 taza de harina..."></textarea>
                 <button class="btn-siguiente-cuadro" onclick="avanzarPaso(2, 3)">❯</button>
             </div>
-
-            <!-- PASO 3: Pasos -->
             <div class="paso-wizard" id="paso3">
                 <p id="tituloPaso">Ingresa el paso 1 y pica a la flecha para poder agregar el paso dos:</p>
                 <textarea id="textoPasoActual" placeholder="Escribe el paso aquí..."></textarea>
-                
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <div class="pasos-lista" id="listaPasosGuardados"></div>
                     <button class="btn-siguiente-cuadro" onclick="guardarPasoInstruccion()">❯</button>
                 </div>
-                
                 <hr style="border:0; border-top:1px dashed #b5d5c5; margin: 15px 0;">
                 <button class="btn-finalizar" onclick="avanzarPaso(3, 4)">Terminar Pasos</button>
             </div>
-
-            <!-- PASO 4: Foto y Descarga -->
             <div class="paso-wizard" id="paso4">
                 <p>Agrega la fotito que ilustrará nuestra receta:</p>
                 <input type="file" id="fotoReceta" accept="image/*" style="margin-bottom: 20px;">
                 <button class="btn-finalizar" onclick="finalizarReceta()">Finalizar Receta 💚</button>
             </div>
-
-            <!-- PASO FINAL: Mensaje -->
             <div class="paso-wizard" id="paso5">
-                <p>¡Listo, mi amor! Se descargó un archivo de texto con tu receta.</p>
-                <p style="font-size: 0.9rem;">Por favor envíame ese archivo y la fotito que elegiste al correo: recetariodeAl@hotmail.com para que la guarde en nuestro recetario.</p>
+                <p>¡Listo mi amor! Se descargó un archivo de texto con tu receta.</p>
+                <p style="font-size: 0.9rem;">Por favor envíale ese archivo y la fotito que elegiste a tu novio caprichoso para que la guarde en nuestro recetario para siempre.</p>
                 <button class="btn-finalizar" onclick="cerrarWizard()">Volver al recetario</button>
             </div>
-
         </div>
     </div>
 
     <script>
-        // Variables para guardar la receta actual
         let recetaFinal = { nombre: '', ingredientes: '', pasos: [] };
         let numeroPasoActual = 1;
 
@@ -314,7 +310,6 @@
 
         function abrirWizard() {
             document.getElementById('wizard').style.display = 'flex';
-            // Reiniciar variables
             recetaFinal = { nombre: '', ingredientes: '', pasos: [] };
             numeroPasoActual = 1;
             document.getElementById('nombreReceta').value = '';
@@ -337,22 +332,19 @@
 
         function guardarPasoInstruccion() {
             const texto = document.getElementById('textoPasoActual').value;
-            if (texto.trim() === "") return; // No agregar vacíos
+            if (texto.trim() === "") return;
             
             recetaFinal.pasos.push(texto);
             document.getElementById('textoPasoActual').value = '';
             
-            // Actualizar interfaz
             numeroPasoActual++;
             document.getElementById('tituloPaso').innerText = `Ingresa el paso ${numeroPasoActual} y pica a la flecha para agregar el siguiente:`;
             
-            // Mostrar un pequeño resumen de que se guardó
             const lista = document.getElementById('listaPasosGuardados');
             lista.innerHTML += `✓ Paso ${numeroPasoActual - 1} guardado<br>`;
         }
 
         function finalizarReceta() {
-            // Formatear todo a un texto
             let textoTxt = `=== NUESTRA NUEVA RECETA ===\n\n`;
             textoTxt += `NOMBRE: ${recetaFinal.nombre}\n\n`;
             textoTxt += `INGREDIENTES:\n${recetaFinal.ingredientes}\n\n`;
@@ -360,9 +352,8 @@
             recetaFinal.pasos.forEach((p, index) => {
                 textoTxt += `${index + 1}. ${p}\n`;
             });
-            textoTxt += `\nNota: Adjuntar foto a este correo.`;
+            textoTxt += `\nNota: Adjuntar foto.`;
 
-            // Crear el archivo .txt y descargarlo
             const blob = new Blob([textoTxt], { type: 'text/plain' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -371,7 +362,6 @@
             a.click();
             window.URL.revokeObjectURL(url);
 
-            // Mostrar el paso final con instrucciones
             mostrarPasoDOM(5);
         }
 
