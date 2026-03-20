@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receta 1 - Enchiladas Suizas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Playfair+Display:ital,wght@0,600;1,500&display=swap');
+
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #fdfbf7;
+            background-image: 
+                linear-gradient(90deg, rgba(181, 213, 197, 0.4) 50%, transparent 50%),
+                linear-gradient(rgba(181, 213, 197, 0.4) 50%, transparent 50%);
+            background-size: 50px 50px;
+            font-family: 'Playfair Display', serif;
+            overflow: hidden;
+        }
+
+        .btn-volver {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #c4a484;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-family: sans-serif;
+            text-decoration: none;
+            font-size: 0.8rem;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #a68462;
+            z-index: 100;
+        }
+        .btn-volver:active { transform: translateY(4px); box-shadow: 0 0 0 #a68462; }
+
+        .libro-container {
+            width: 90%;
+            max-width: 400px;
+            height: 75vh;
+            position: relative;
+        }
+
+        .pestana {
+            position: absolute;
+            right: -25px; 
+            top: 40px;
+            background-color: #e0ece6; 
+            border: 1px dashed #8dae9d;
+            border-left: none;
+            padding: 15px 5px;
+            border-radius: 0 10px 10px 0;
+            font-family: 'Caveat', cursive;
+            color: #5c4033;
+            font-size: 1.2rem;
+            writing-mode: vertical-rl; 
+            text-orientation: mixed;
+            box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+            z-index: 0;
+        }
+
+        .interior {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #fdfbf7;
+            border-left: 15px solid #b5d5c5;
+            border-radius: 5px 15px 15px 5px;
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.15);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .slider-galeria {
+            display: flex; 
+            width: 100%; 
+            height: 85%;
+            overflow-x: hidden; 
+            scroll-behavior: smooth;
+        }
+
+        .pagina {
+            min-width: 100%; 
+            height: 100%; 
+            padding: 15px 35px;
+            box-sizing: border-box; 
+            display: flex; 
+            flex-direction: column;
+            overflow-y: hidden; 
+        }
+
+        .pagina h2 {
+            font-family: 'Caveat', cursive; 
+            color: #8dae9d; 
+            font-size: 2.2rem;
+            margin: 0 0 15px 0; 
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .pagina h3 {
+            font-family: 'Caveat', cursive;
+            color: #c4a484;
+            font-size: 1.8rem;
+            margin: 5px 0 15px 0;
+            border-bottom: 1px dashed #e0ece6;
+            padding-bottom: 5px;
+            text-align: center;
+        }
+
+        .foto-receta {
+            background: white;
+            padding: 8px 8px 20px 8px; 
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            width: 65%;
+            margin: 0 auto;
+            transform: rotate(-3deg);
+        }
+
+        /* Nueva clase para la foto real */
+        .img-polaroid {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover; /* Para que no se deforme */
+            display: block;
+            background-color: #e0ece6; /* Color de fondo por si tarda en cargar */
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+            font-size: 0.9rem; 
+            color: #5c4033;
+            line-height: 1.5;
+        }
+
+        ul li { margin-bottom: 10px; }
+        ul li::before { content: '🌿'; margin-right: 8px; font-size: 0.8rem; }
+
+        ol {
+            padding-left: 20px;
+            margin: 0;
+            font-size: 0.9rem;
+            color: #5c4033;
+            line-height: 1.5;
+        }
+
+        ol li { margin-bottom: 15px; padding-left: 5px; }
+        ol li strong { color: #8dae9d; font-family: 'Playfair Display', serif; }
+
+        .tip-servir {
+            background-color: #e0ece6;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 5px;
+            font-size: 0.85rem;
+            color: #5c4033;
+            border-left: 4px solid #8dae9d;
+        }
+
+        .controles {
+            height: 15%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            gap: 20px; 
+            background-color: rgba(253, 251, 247, 0.9); 
+            border-top: 1px dashed #b5d5c5;
+        }
+        
+        .btn-nav { 
+            background-color: #b5d5c5; 
+            color: #5c4033; 
+            border: none; 
+            border-radius: 50%; 
+            width: 40px; 
+            height: 40px; 
+            font-size: 1.2rem; 
+            cursor: pointer; 
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        .btn-nav:active { transform: scale(0.9); }
+
+    </style>
+</head>
+<body>
+
+    <a href="cuaderno2.html" class="btn-volver">❮ VOLVER A LA GALERÍA</a>
+
+    <div class="libro-container">
+        
+        <div class="pestana">Enchiladas</div>
+
+        <div class="interior">
+            <div class="slider-galeria" id="sliderReceta">
+                
+                <!-- PÁGINA 1: Portada de la Receta -->
+                <div class="pagina" style="justify-content: center;">
+                    <h2>Enchiladas Suizas Cremosas</h2>
+                    
+                    <div class="foto-receta">
+                        <!-- Aquí va tu foto real -->
+                        <img src="enchiladas_suizas.jpg" alt="Enchiladas Suizas" class="img-polaroid">
+                    </div>
+                </div>
+
+                <!-- PÁGINA 2: Ingredientes Base -->
+                <div class="pagina">
+                    <h3>Ingredientes (1/2)</h3>
+                    <ul>
+                        <li>6 tortillas de maíz</li>
+                        <li>1 pechuga de pollo cocida y deshebrada</li>
+                        <li>½ taza de queso manchego o Oaxaca rallado</li>
+                        <li>¼ de cebolla en rodajas (opcional)</li>
+                        <li>Aceite (para freír ligeramente)</li>
+                    </ul>
+                </div>
+
+                <!-- PÁGINA 3: Ingredientes Salsa -->
+                <div class="pagina">
+                    <h3>Ingredientes Salsa</h3>
+                    <ul>
+                        <li>6 tomates verdes</li>
+                        <li>1/4 de cebolla y 1 diente de ajo</li>
+                        <li>1–2 chiles serranos (al gusto)</li>
+                        <li>½ taza de crema y ¼ taza de leche</li>
+                        <li>1 cda. de consomé de pollo (o sal)</li>
+                        <li>1 cdita. de mantequilla o aceite</li>
+                    </ul>
+                </div>
+
+                <!-- PÁGINA 4: Preparación (Pasos 1 a 3) -->
+                <div class="pagina">
+                    <h3>Preparación (1/2)</h3>
+                    <ol>
+                        <li><strong>Cuece la salsa:</strong> Hierve los tomates, cebolla, ajo y chiles por 10 min. Licúa con crema, leche y consomé.</li>
+                        <li><strong>Cocina la salsa:</strong> En sartén, derrite mantequilla. Vierte la salsa, cocina a fuego medio 5 min.</li>
+                        <li><strong>Prepara tortillas:</strong> Pásalas por aceite caliente rápido para suavizarlas.</li>
+                    </ol>
+                </div>
+
+                <!-- PÁGINA 5: Preparación (Pasos 4 a 5 y Tip) -->
+                <div class="pagina">
+                    <h3>Preparación (2/2)</h3>
+                    <ol start="4">
+                        <li><strong>Arma:</strong> Rellena cada tortilla con pollo. Enróllalas en un refractario.</li>
+                        <li><strong>Baña y gratina:</strong> Cubre con salsa y queso. Calienta hasta derretir.</li>
+                    </ol>
+
+                    <div class="tip-servir">
+                        <strong>🍽️ Para servir:</strong> Decora con cebolla y crema. Acompaña con frijoles o arroz.
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Controles -->
+            <div class="controles">
+                <button class="btn-nav" onclick="moverPagina(-1)">❮</button>
+                <button class="btn-nav" onclick="moverPagina(1)">❯</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function moverPagina(dir) {
+            const slider = document.getElementById('sliderReceta');
+            slider.scrollLeft += (dir * slider.offsetWidth);
+        }
+    </script>
+
+</body>
+</html>
